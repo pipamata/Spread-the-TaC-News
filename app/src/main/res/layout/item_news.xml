@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="200">
+
+    <ImageView
+        android:id="@+id/news_image"
+        android:contentDescription="@string/imagemnoticia"
+        android:layout_width="match_parent"
+        android:layout_height="89dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_launcher_foreground" />
 
     <TextView
         android:id="@+id/txtv_teste"
         android:layout_width="match_parent"
+        android:layout_height="145dp"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/button_news_id"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="" />
+
+
 </LinearLayout>

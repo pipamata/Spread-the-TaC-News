@@ -26,14 +26,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Text1 = (TextView) findViewById(R.id.textView);
+        Text1 = findViewById(R.id.textView);
         editText = findViewById(R.id.editText);
         button = findViewById(R.id.button);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // getWebsite();
+                getWebsite();
             }
         });
     }
