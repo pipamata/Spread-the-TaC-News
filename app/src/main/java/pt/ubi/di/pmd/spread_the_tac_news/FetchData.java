@@ -1,9 +1,12 @@
 package pt.ubi.di.pmd.spread_the_tac_news;
 
+import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,9 +15,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class FetchData extends AsyncTask<Void,Void,Void> {
     String data ="";
+    String dataParsed ="";
+    String singleParsed ="";
+    List<Noticia> listaNoticias = new ArrayList<>();
+
 
     @Override
     protected Void doInBackground(Void... voids) {
@@ -40,6 +50,24 @@ public class FetchData extends AsyncTask<Void,Void,Void> {
                 data += line;
             }
 
+            String titulo;
+            String contexto;
+            String date;
+            String autor;
+
+            JSONArray jsonArray = new JSONArray(data);
+            for (int i = 0 ; i < jsonArray.length(); i++ ){
+
+                JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                titulo =(String) jsonObject.get("Titulo");
+                contexto = (String) jsonObject.get("Contexto");
+                date =(String) jsonObject.get("Data");
+                autor = (String) jsonObject.get("Autor");
+
+                listaNoticias.add(new Noticia(titulo,contexto,autor,date));
+
+            }
+
 
 
 
@@ -47,6 +75,8 @@ public class FetchData extends AsyncTask<Void,Void,Void> {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
@@ -56,14 +86,14 @@ public class FetchData extends AsyncTask<Void,Void,Void> {
     @Override
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
-        if (MainActivity.data.toString().isEmpty()){
-            MainActivity.data.setText("VAZIO");
-        }
-        else {
-            MainActivity.data.setText(data);
-        }
+
+
 
     }
 
-    // criar um metodo que devolve um array com as noticias para a pagina onde vao ser impressas e guardadas na base de dados local.
+    public List<Noticia> NoticiasSucesso(){
+
+
+        return listaNoticias;
+    }
 }

@@ -32,7 +32,8 @@ public class News extends AppCompatActivity {
         // (activity news )Atividade principal onde vamos ver as noticias
         linearLayoutActivityNew = findViewById(R.id.ll_activity_news);
 
-        List<String> todasNoticias;
+        List<Noticia> todasNoticias;
+
         List<LinearLayout> listaLayouts = new ArrayList<>(); // lista onde guardamos todos os layouts de modo a poder aceder mais tarde se necessario.
 
         todasNoticias = db.getAll(); // metodo retorna uma List/arraylist de Noticias(neste caso so strings), que vem da base de dados.
@@ -44,11 +45,22 @@ public class News extends AppCompatActivity {
 
             linearLayoutActivityNew.addView(linLay); // adicionamos o layout do item_news onde temos o formato das noticias guardado no Feed de noticias...
 
-            TextView tv = linLay.findViewById(R.id.txtv_teste);
-            tv.setText(todasNoticias.get(i));
+            TextView tvnoticia = linLay.findViewById(R.id.txtv_teste);
+            tvnoticia.setText(todasNoticias.get(i).getContexto());
+
+            TextView tvtitulo = linLay.findViewById(R.id.txtv_titulo);
+            tvtitulo.setText(todasNoticias.get(i).getTitulo());
+
+            TextView tvautor = linLay.findViewById(R.id.txtv_autor);
+            tvautor.setText("Autor: "+todasNoticias.get(i).getAutor());
+
+            TextView tvdata = linLay.findViewById(R.id.txtv_data);
+            tvdata.setText("Data: "+ todasNoticias.get(i).getData());
+
+
 
             final Button btn = linLay.findViewById(R.id.button_news_id) ; // pode ser necessario criar um array de botoes de modo a poder saber qual a noticia que foi carregada.
-           String placeHolder = getString(R.string.avaliar)+" "+i;
+            String placeHolder = getString(R.string.avaliar)+" "+i;
             btn.setText(placeHolder);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -59,7 +71,7 @@ public class News extends AppCompatActivity {
             });
         }
         // exemplo de como aceder a um LinearLayout já impresso
-        TextView teste = listaLayouts.get(0).findViewById(R.id.txtv_teste);
-        teste.setText(getString(R.string.resultou));
+        //TextView teste = listaLayouts.get(0).findViewById(R.id.txtv_teste);
+        //teste.setText(getString(R.string.resultou));
     }
 }

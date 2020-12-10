@@ -18,6 +18,16 @@ import java.io.IOException;
 */
 
 // teste
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.ref.Reference;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.NetworkInterface;
+import java.net.URL;
+import java.sql.Ref;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,9 +39,15 @@ import org.json.JSONObject;
 
 import android.app.ListActivity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,13 +58,22 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 // fim teste
 
 public class MainActivity extends AppCompatActivity {
 
-    public static TextView data; // é mesmo preciso ser estatico?
+    public TextView data; //
     EditText editText;
     Button button;
+
+    FetchData process = new FetchData();
+    List<Noticia> listaNoticias = new ArrayList<>();
+    DataBaseHelper db  = new DataBaseHelper(MainActivity.this);
+
+
+
+
 
 
     @Override
@@ -58,20 +83,138 @@ public class MainActivity extends AppCompatActivity {
         data = findViewById(R.id.textView);
         button = findViewById(R.id.button);
 
+        if (isNetWorkAvaible()) {
+            Log.d("TemNet", "Temo net");
+            process.execute();
+            final Handler handler = new Handler(Looper.getMainLooper());
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                    listaNoticias = process.NoticiasSucesso();
+
+                    db.AddMultNews(listaNoticias);
+
+                    Toast.makeText(MainActivity.this,"Sucesso "+listaNoticias.size(),Toast.LENGTH_SHORT).show();
+                }
+            }, 500);
 
 
-          button.setOnClickListener(new View.OnClickListener() {
+        } else {
+            Log.d("TemNet", "Nao temo net");
+
+
+        }
+
+
+
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //getWebsite();
-                FetchData process = new FetchData();
-                process.execute();
+                // verificar se a base de dados local tem noticias
+                // se sim entao envia para a pagina
+                Intent intent = new Intent(MainActivity.this, News.class);
+                startActivity(intent);
             }
         });
 
 
+
+
+
     }
 
+    public boolean isNetWorkAvaible(){
+
+        try {
+            ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = null;
+            if (manager != null){
+                networkInfo = manager.getActiveNetworkInfo();
+            }
+            return networkInfo != null && networkInfo.isConnected();
+        }catch (NullPointerException e){
+            return false;
+        }
+
+
+    }
+
+/*
+    private class FetchData extends AsyncTask<Void,Void,Void> {
+        String data ="";
+        String dataParsed ="";
+        String singleParsed ="";
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            // modificar o modo de armaznamento do json file.
+
+            try {
+
+
+                URL url = new URL(" http://10.0.2.2:80/TAC/get_product_details.php"); // equivale ao localHost/NomedaPastaNoXamp/NomedoFicheiroPhp
+
+
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                InputStream inputStream = httpURLConnection.getInputStream();
+
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = "";
+
+                while (line != null){
+
+                    line = bufferedReader.readLine(); // juntar estas duas linhas
+                    data += line;
+                }
+
+                List<Noticia> listaNoticias = new ArrayList<>();
+                String titulo;
+                String contexto;
+
+                JSONArray jsonArray = new JSONArray(data);
+                for (int i = 0 ; i < jsonArray.length(); i++ ){
+
+                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
+                    titulo =(String) jsonObject.get("Titulo");
+                    contexto = (String) jsonObject.get("Contexto");
+
+                    listaNoticias.add(new Noticia(titulo,contexto));
+
+                }
+
+
+
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            DataBaseHelper db = new DataBaseHelper(MainActivity.this);
+            if (MainActivity.data.toString().isEmpty()){
+                MainActivity.data.setText("VAZIO");
+            }
+            else {
+                MainActivity.data.setText(dataParsed);
+            }
+
+
+        }
+    }
 
 /*
     private void getWebsite(){

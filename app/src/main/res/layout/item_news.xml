@@ -5,12 +5,18 @@
     android:orientation="vertical"
     android:weightSum="200">
 
+    <TextView
+        android:id="@+id/txtv_titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+
     <ImageView
         android:id="@+id/news_image"
-        android:contentDescription="@string/imagemnoticia"
         android:layout_width="match_parent"
         android:layout_height="89dp"
         android:layout_gravity="center"
+        android:contentDescription="@string/imagemnoticia"
         android:src="@drawable/ic_launcher_foreground" />
 
     <TextView
@@ -18,6 +24,18 @@
         android:layout_width="match_parent"
         android:layout_height="145dp"
         android:gravity="center" />
+
+    <TextView
+        android:id="@+id/txtv_autor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Autor" />
+
+    <TextView
+        android:id="@+id/txtv_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Data" />
 
     <Button
         android:id="@+id/button_news_id"
