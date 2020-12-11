@@ -120,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 // verificar se a base de dados local tem noticias
                 // se sim entao envia para a pagina
                 Intent intent = new Intent(MainActivity.this, News.class);
+                intent.putExtra("Username",username);
                 startActivity(intent);
             }
         });

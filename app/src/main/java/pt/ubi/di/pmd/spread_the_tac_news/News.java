@@ -11,8 +11,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class News extends AppCompatActivity {
 
@@ -21,6 +31,7 @@ public class News extends AppCompatActivity {
     LinearLayout linearLayoutItemNews2;
     TextView textViewItemNews;
     TextView textViewItemNews2;
+    String username;
 
     ImageView newsImage;
 
@@ -28,6 +39,8 @@ public class News extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news);
+
+        username = getIntent().getStringExtra("Username");
 
         DataBaseHelper db = new DataBaseHelper(News.this);
 
@@ -64,19 +77,30 @@ public class News extends AppCompatActivity {
 
 
             final Button btn = linLay.findViewById(R.id.button_news_id) ; // pode ser necessario criar um array de botoes de modo a poder saber qual a noticia que foi carregada.
-            String placeHolder = getString(R.string.avaliar)+" "+i;
-            btn.setText(placeHolder);
+            String buttonName = getString(R.string.avaliar)+" "+i;
+            btn.setText(buttonName);
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int myNum = Integer.parseInt(numNota.getText().toString());
 
-                    if( myNum > 5 || myNum< 0){
-                        Toast.makeText(News.this,"Precisa colocar um nota entre 0 e 5",Toast.LENGTH_SHORT).show();
+                    if(!numNota.getText().toString().isEmpty()){
+                        int myNum = Integer.parseInt(numNota.getText().toString());
+
+                        if( myNum > 5 || myNum< 0){
+                            Toast.makeText(News.this,"Precisa colocar um nota entre 0 e 5",Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(News.this, numNota.getText().toString() + " id Noticia:" + idNoticia, Toast.LENGTH_LONG).show(); // cada botao tem um set on click listener diferente e sao criados dinamicamente ao mesmo tempos que as noticias
+
+                            SendToRemoteDB(username,idNoticia, numNota.getText().toString()); // em vez de renato username
+                            btn.setVisibility(View.GONE);
+                        }
+
                     }
                     else {
-                        Toast.makeText(News.this, numNota.getText().toString() + " id Noticia:" + idNoticia, Toast.LENGTH_LONG).show(); // cada botao tem um set on click listener diferente e sao criados dinamicamente ao mesmo tempos que as noticias
+                        Toast.makeText(News.this,"Selecione uma nota de 0 a 5",Toast.LENGTH_SHORT).show();
                     }
+
                 }
             });
         }
@@ -85,5 +109,38 @@ public class News extends AppCompatActivity {
         //teste.setText(getString(R.string.resultou));
     }
 
+    public  boolean SendToRemoteDB(final String user, int id, final String nota ){
+        final String noticiaID = ""+id;
+        String url = "http://10.0.2.2:80/TAC/add_note.php";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Toast.makeText(News.this, response.trim(),Toast.LENGTH_SHORT).show();
+                    }
+
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(News.this, error.toString(),Toast.LENGTH_SHORT).show();
+                    }
+                })
+        {
+            @Override
+            protected Map<String, String> getParams(){
+                Map<String,String> params = new HashMap<String, String>();
+                params.put("user",user);
+                params.put("id",noticiaID);
+                params.put("nota",nota);
+
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue  = Volley.newRequestQueue(News.this);
+        requestQueue.add(stringRequest);
+        return  true;
+    }
 
 }
