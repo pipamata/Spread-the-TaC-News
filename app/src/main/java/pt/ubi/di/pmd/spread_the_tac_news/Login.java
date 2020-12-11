@@ -51,14 +51,12 @@ public class Login extends AppCompatActivity {
     private void Validate(String userName, String userPassword){
         listaUsers = mDatabase.getAllUsers();
         boolean userExist=false;
-        Log.d("Login", listaUsers.size()+"");
         for (int i = 0; i<listaUsers.size(); i++) {
             if ((userName.equals(listaUsers.get(i).getUser())) && (userPassword.equals(listaUsers.get(i).getPassword()))) {
                 Toast.makeText(this, "Dados de Login corretos", Toast.LENGTH_SHORT).show();
                 userExist = true;
                 break;
             }
-            Log.d("Login", String.valueOf(userExist));
         }
 
         if (userExist){
@@ -67,6 +65,7 @@ public class Login extends AppCompatActivity {
             startActivity(intent);
         }else{
             Toast.makeText(this, "Password ou Username incorretos", Toast.LENGTH_SHORT).show();
+            password.setText("");
         }
 
     }
