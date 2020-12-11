@@ -20,6 +20,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     public static final String CONTEXTO = "CONTEXTO";
     public static final String AUTOR = "AUTOR";
     public static final String DATA = "DATA";
+    public static final String USERS = "USERS";
+    public static final String USERNAME = "USERNAME";
+    public static final String PASSWORD = "PASSWORD";
 
     public DataBaseHelper(@Nullable Context context){
         super(context, "news.db", null, 1);
@@ -30,6 +33,8 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String creatTable = "CREATE TABLE " + NEWS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + TITULO + " TEXT, " + CONTEXTO + " TEXT, " + AUTOR + " VARCHAR(30), " + DATA + " VARCHAR(30) )";
+        String createTableUsers = "CREATE TABLE " + USERS + " (" + USERNAME + " VARCHAR(15) PRIMARY KEY, " + PASSWORD + " VARCHAR(30))";
+        db.execSQL(createTableUsers);
         db.execSQL(creatTable);
 
         //PrePopulate(db);
@@ -119,5 +124,40 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         cursor.close();
         return listaNoticias;
+    }
+
+    //USERS
+
+    public void adicionarUser(String nome, String password){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues valores = new ContentValues();
+        valores.put(USERNAME, nome);
+        valores.put(PASSWORD, password);
+
+        db.insert(USERS,null, valores);
+
+    }
+
+    public List<User> getAllUsers(){
+        List<User> listaUsers= new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM "+ USERS;
+
+        Cursor cursor = db.rawQuery(query,null);
+
+        if (cursor.moveToFirst()){ // cursos.moveToFirst move o ponteiro para a primeira linha da base de dados
+            do {
+
+                String user = cursor.getString(0);
+                String password = cursor.getString(1);
+
+                listaUsers.add(new User(user, password));
+
+            }while(cursor.moveToNext()); // cursor.MoveToNext move o ponteiro para a proxima linha da base de dados se existir
+        }
+
+        cursor.close();
+        return listaUsers;
     }
 }

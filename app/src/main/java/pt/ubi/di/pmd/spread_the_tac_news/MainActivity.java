@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
     public TextView data; //
     EditText editText;
     Button button;
+    TextView welcome;
+    String username;
 
     FetchData process = new FetchData();
     List<Noticia> listaNoticias = new ArrayList<>();
@@ -82,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         data = findViewById(R.id.textView);
         button = findViewById(R.id.button);
+        welcome= findViewById(R.id.txtv_welcome);
+        username = getIntent().getStringExtra("Username");
+
+        welcome.setText("Welcome "+username);
 
         if (isNetWorkAvaible()) {
             Log.d("TemNet", "Temo net");
