@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ public class News extends AppCompatActivity {
     LinearLayout linearLayoutItemNews2;
     TextView textViewItemNews;
     TextView textViewItemNews2;
+
     ImageView newsImage;
 
     @Override
@@ -34,13 +36,13 @@ public class News extends AppCompatActivity {
 
         List<Noticia> todasNoticias;
 
-        List<LinearLayout> listaLayouts = new ArrayList<>(); // lista onde guardamos todos os layouts de modo a poder aceder mais tarde se necessario.
+        List<LinearLayout> listaLayouts = new ArrayList<>(); // SE NAO UTILIZAR APAGAR
 
         todasNoticias = db.getAll(); // metodo retorna uma List/arraylist de Noticias(neste caso so strings), que vem da base de dados.
 
         for (int i = todasNoticias.size()-1; i >= 0  ; i--){
 
-            LinearLayout linLay = (LinearLayout) getLayoutInflater().inflate(R.layout.item_news,linearLayoutActivityNew,false);
+            final LinearLayout linLay = (LinearLayout) getLayoutInflater().inflate(R.layout.item_news,linearLayoutActivityNew,false);
             listaLayouts.add(linLay);
 
             linearLayoutActivityNew.addView(linLay); // adicionamos o layout do item_news onde temos o formato das noticias guardado no Feed de noticias...
@@ -57,6 +59,8 @@ public class News extends AppCompatActivity {
             TextView tvdata = linLay.findViewById(R.id.txtv_data);
             tvdata.setText("Data: "+ todasNoticias.get(i).getData());
 
+            final EditText numNota = linLay.findViewById(R.id.edtxt_nota);
+            final int idNoticia = i + 1;
 
 
             final Button btn = linLay.findViewById(R.id.button_news_id) ; // pode ser necessario criar um array de botoes de modo a poder saber qual a noticia que foi carregada.
@@ -65,8 +69,14 @@ public class News extends AppCompatActivity {
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(News.this,btn.getText().toString(),Toast.LENGTH_LONG).show(); // cada botao tem um set on click listener diferente e sao criados dinamicamente ao mesmo tempos que as noticias
+                    int myNum = Integer.parseInt(numNota.getText().toString());
 
+                    if( myNum > 5 || myNum< 0){
+                        Toast.makeText(News.this,"Precisa colocar um nota entre 0 e 5",Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(News.this, numNota.getText().toString() + " id Noticia:" + idNoticia, Toast.LENGTH_LONG).show(); // cada botao tem um set on click listener diferente e sao criados dinamicamente ao mesmo tempos que as noticias
+                    }
                 }
             });
         }
@@ -74,4 +84,6 @@ public class News extends AppCompatActivity {
         //TextView teste = listaLayouts.get(0).findViewById(R.id.txtv_teste);
         //teste.setText(getString(R.string.resultou));
     }
+
+
 }

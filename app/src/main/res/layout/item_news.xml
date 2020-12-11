@@ -37,6 +37,14 @@
         android:layout_height="wrap_content"
         android:text="Data" />
 
+    <EditText
+        android:id="@+id/edtxt_nota"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="NOTA 0 a 5"
+        android:inputType="number" />
+
     <Button
         android:id="@+id/button_news_id"
         android:layout_width="match_parent"

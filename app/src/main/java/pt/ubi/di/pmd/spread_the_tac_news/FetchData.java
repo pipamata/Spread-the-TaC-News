@@ -59,10 +59,10 @@ public class FetchData extends AsyncTask<Void,Void,Void> {
             for (int i = 0 ; i < jsonArray.length(); i++ ){
 
                 JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                titulo =(String) jsonObject.get("Titulo");
-                contexto = (String) jsonObject.get("Contexto");
-                date =(String) jsonObject.get("Data");
-                autor = (String) jsonObject.get("Autor");
+                titulo =(String) jsonObject.get("titulo");
+                contexto = (String) jsonObject.get("descricao");
+                date =(String) jsonObject.get("data");
+                autor = (String) jsonObject.get("autor");
 
                 listaNoticias.add(new Noticia(titulo,contexto,autor,date));
 
