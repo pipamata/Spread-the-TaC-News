@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3"
         app:layout_constraintBottom_toTopOf="@+id/rPass"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <EditText
         android:id="@+id/rPass"
@@ -67,7 +67,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rRegisto" />
+        app:layout_constraintTop_toBottomOf="@+id/rRegisto"/>
 
     <Button
         android:id="@+id/rRegisto"
