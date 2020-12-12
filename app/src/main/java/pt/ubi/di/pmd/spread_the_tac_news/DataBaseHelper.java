@@ -14,7 +14,6 @@ import java.util.List;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
-
     public static final String NEWS = "NEWS";
     public static final String TITULO = "TITULO";
     public static final String CONTEXTO = "CONTEXTO";
@@ -28,31 +27,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         super(context, "news.db", null, 1);
     }
 
-
-
     @Override
     public void onCreate(SQLiteDatabase db) {
         String creatTable = "CREATE TABLE " + NEWS + " (ID INTEGER PRIMARY KEY AUTOINCREMENT, " + TITULO + " TEXT, " + CONTEXTO + " TEXT, " + AUTOR + " VARCHAR(30), " + DATA + " VARCHAR(30) )";
         String createTableUsers = "CREATE TABLE " + USERS + " (" + USERNAME + " VARCHAR(15) PRIMARY KEY, " + PASSWORD + " VARCHAR(30))";
         db.execSQL(createTableUsers);
         db.execSQL(creatTable);
-
-        //PrePopulate(db);
-
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
-
-    public void PrePopulate(SQLiteDatabase db){ // apagar no fim
-
-        ContentValues cv = new ContentValues();
-        cv.put(TITULO, "Titulo");
-        cv.put(CONTEXTO, "Contexto");
-
-        db.insert(NEWS, null , cv);
 
     }
 
@@ -66,29 +50,22 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         cv.put(DATA, noticia.getData());
 
         db.insert(NEWS, null , cv);
-
     }
+
     public  void AddMultNews(List<Noticia> listaNoticias){
         int idUltimaNoticia;
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
         String query = "SELECT * FROM "+ NEWS;
-
-
         Cursor cursor = db.rawQuery(query,null);
-        Log.d("BaseD",cursor.getCount()+"");
 
         if(cursor.getCount()> 0){
             cursor.moveToLast();
             idUltimaNoticia = cursor.getInt(0); // id da ultima noticia.
-            Log.d("BaseD",idUltimaNoticia+"");
-        }
-        else {
+        }else{
             idUltimaNoticia = 0;
-            Log.d("BaseD",idUltimaNoticia+"");
         }
-
 
         for (int i=idUltimaNoticia; i < listaNoticias.size() ; i++){
             cv.put(TITULO, listaNoticias.get(i).getTitulo());
@@ -98,65 +75,56 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
             db.insert(NEWS, null , cv);
         }
-
-
         db.close();
     }
+
     public List<Noticia> getAll(){
         List<Noticia> listaNoticias = new ArrayList<>();
         String query = "SELECT * FROM "+ NEWS;
 
         SQLiteDatabase db = this.getReadableDatabase();
-
         Cursor cursor = db.rawQuery(query,null);
 
-        if (cursor.moveToFirst()){ // cursos.moveToFirst move o ponteiro para a primeira linha da base de dados
+        if (cursor.moveToFirst()){ // cursos.moveToFirst - move o ponteiro para a primeira linha da base de dados
             do {
-
                 String titulo = cursor.getString(1);
                 String contexto = cursor.getString(2);
                 String autor = cursor.getString(3);
                 String data = cursor.getString(4);
                 listaNoticias.add(new Noticia(titulo,contexto,autor,data));
 
-            }while(cursor.moveToNext()); // cursor.MoveToNext move o ponteiro para a proxima linha da base de dados se existir
+            }while(cursor.moveToNext()); // cursor.MoveToNext - move o ponteiro para a proxima linha da base de dados se existir
         }
-
         cursor.close();
         return listaNoticias;
     }
 
-    //USERS
+    // Tabela USERS
 
     public void adicionarUser(String nome, String password){
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues valores = new ContentValues();
+
         valores.put(USERNAME, nome);
         valores.put(PASSWORD, password);
 
         db.insert(USERS,null, valores);
-
     }
 
     public List<User> getAllUsers(){
         List<User> listaUsers= new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "SELECT * FROM "+ USERS;
-
         Cursor cursor = db.rawQuery(query,null);
 
-        if (cursor.moveToFirst()){ // cursos.moveToFirst move o ponteiro para a primeira linha da base de dados
+        if (cursor.moveToFirst()){
             do {
-
                 String user = cursor.getString(0);
                 String password = cursor.getString(1);
 
                 listaUsers.add(new User(user, password));
-
-            }while(cursor.moveToNext()); // cursor.MoveToNext move o ponteiro para a proxima linha da base de dados se existir
+            }while(cursor.moveToNext());
         }
-
         cursor.close();
         return listaUsers;
     }

@@ -32,7 +32,6 @@ public class News extends AppCompatActivity {
     TextView textViewItemNews;
     TextView textViewItemNews2;
     String username;
-
     ImageView newsImage;
 
     @Override
@@ -41,15 +40,13 @@ public class News extends AppCompatActivity {
         setContentView(R.layout.activity_news);
 
         username = getIntent().getStringExtra("Username");
-
         DataBaseHelper db = new DataBaseHelper(News.this);
 
         // (activity news )Atividade principal onde vamos ver as noticias
         linearLayoutActivityNew = findViewById(R.id.ll_activity_news);
 
         List<Noticia> todasNoticias;
-
-        List<LinearLayout> listaLayouts = new ArrayList<>(); // SE NAO UTILIZAR APAGAR
+        List<LinearLayout> listaLayouts = new ArrayList<>(); // SE NAO UTILIZAR - APAGAR
 
         todasNoticias = db.getAll(); // metodo retorna uma List/arraylist de Noticias(neste caso so strings), que vem da base de dados.
 
@@ -74,39 +71,30 @@ public class News extends AppCompatActivity {
 
             final EditText numNota = linLay.findViewById(R.id.edtxt_nota);
             final int idNoticia = i + 1;
-
-
             final Button btn = linLay.findViewById(R.id.button_news_id) ; // pode ser necessario criar um array de botoes de modo a poder saber qual a noticia que foi carregada.
+
             String buttonName = getString(R.string.avaliar)+" "+i;
             btn.setText(buttonName);
+
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     if(!numNota.getText().toString().isEmpty()){
                         int myNum = Integer.parseInt(numNota.getText().toString());
 
                         if( myNum > 5 || myNum< 0){
                             Toast.makeText(News.this,"Precisa colocar um nota entre 0 e 5",Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                        } else {
                             Toast.makeText(News.this, numNota.getText().toString() + " id Noticia:" + idNoticia, Toast.LENGTH_LONG).show(); // cada botao tem um set on click listener diferente e sao criados dinamicamente ao mesmo tempos que as noticias
-
                             SendToRemoteDB(username,idNoticia, numNota.getText().toString()); // em vez de renato username
                             btn.setVisibility(View.GONE);
                         }
-
-                    }
-                    else {
+                    } else {
                         Toast.makeText(News.this,"Selecione uma nota de 0 a 5",Toast.LENGTH_SHORT).show();
                     }
-
                 }
             });
         }
-        // exemplo de como aceder a um LinearLayout já impresso
-        //TextView teste = listaLayouts.get(0).findViewById(R.id.txtv_teste);
-        //teste.setText(getString(R.string.resultou));
     }
 
     public  boolean SendToRemoteDB(final String user, int id, final String nota ){
@@ -118,7 +106,6 @@ public class News extends AppCompatActivity {
                     public void onResponse(String response) {
                         Toast.makeText(News.this, response.trim(),Toast.LENGTH_SHORT).show();
                     }
-
                 },
                 new Response.ErrorListener() {
                     @Override
@@ -137,10 +124,8 @@ public class News extends AppCompatActivity {
                 return params;
             }
         };
-
         RequestQueue requestQueue  = Volley.newRequestQueue(News.this);
         requestQueue.add(stringRequest);
         return  true;
     }
-
 }

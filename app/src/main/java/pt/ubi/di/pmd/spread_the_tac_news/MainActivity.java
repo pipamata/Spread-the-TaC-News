@@ -63,8 +63,7 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
-    public TextView data; //
-    EditText editText;
+    TextView data;
     Button button;
     TextView welcome;
     String username;
@@ -72,11 +71,6 @@ public class MainActivity extends AppCompatActivity {
     FetchData process = new FetchData();
     List<Noticia> listaNoticias = new ArrayList<>();
     DataBaseHelper db  = new DataBaseHelper(MainActivity.this);
-
-
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,33 +80,21 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         welcome= findViewById(R.id.txtv_welcome);
         username = getIntent().getStringExtra("Username");
-
         welcome.setText("Welcome "+username);
 
         if (isNetWorkAvaible()) {
-            Log.d("TemNet", "Temo net");
             process.execute();
             final Handler handler = new Handler(Looper.getMainLooper());
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
                     listaNoticias = process.NoticiasSucesso();
-
                     db.AddMultNews(listaNoticias);
-
                     Toast.makeText(MainActivity.this,"Sucesso "+listaNoticias.size(),Toast.LENGTH_SHORT).show();
                 }
             }, 500);
 
-
-        } else {
-            Log.d("TemNet", "Nao temo net");
-
-
         }
-
-
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,27 +106,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
-
-
     }
 
     public boolean isNetWorkAvaible(){
-
         try {
             ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = null;
+
             if (manager != null){
                 networkInfo = manager.getActiveNetworkInfo();
             }
             return networkInfo != null && networkInfo.isConnected();
+
         }catch (NullPointerException e){
             return false;
         }
-
-
     }
 
 /*

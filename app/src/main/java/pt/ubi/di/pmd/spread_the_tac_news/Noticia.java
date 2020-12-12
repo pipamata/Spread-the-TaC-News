@@ -7,9 +7,7 @@ public class Noticia {
     String autor;
     // imagem
     String data;
-
     //numero de likes
-
 
     public Noticia() {
         Titulo = "";
@@ -17,6 +15,7 @@ public class Noticia {
         this.autor = "";
         this.data = "";
     }
+
     public Noticia(String titulo, String contexto, String autor, String data) {
         Titulo = titulo;
         Contexto = contexto;

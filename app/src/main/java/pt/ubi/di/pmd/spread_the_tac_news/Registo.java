@@ -14,11 +14,11 @@ import java.util.List;
 
 public class Registo extends AppCompatActivity {
     DataBaseHelper mDatabase = new DataBaseHelper(this);
-    private EditText name;
-    private EditText password;
-    private EditText confpassword;
-    private Button registo;
-    private Button login;
+    EditText name;
+    EditText password;
+    EditText confpassword;
+    Button registo;
+    Button login;
     List<User> listaUsers =  new ArrayList<>();
 
     @Override
@@ -26,11 +26,11 @@ public class Registo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registo);
 
-        name=(EditText)findViewById(R.id.rNome);
-        password=(EditText)findViewById(R.id.rPass);
-        confpassword=(EditText)findViewById(R.id.rConfPass);
-        registo=(Button)findViewById(R.id.rRegisto);
-        login=(Button)findViewById(R.id.rLogin);
+        name=findViewById(R.id.rNome);
+        password=findViewById(R.id.rPass);
+        confpassword=findViewById(R.id.rConfPass);
+        registo=findViewById(R.id.rRegisto);
+        login=findViewById(R.id.rLogin);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -39,6 +39,7 @@ public class Registo extends AppCompatActivity {
                 startActivity(loginIn);
             }
         });
+
         registo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -54,18 +55,19 @@ public class Registo extends AppCompatActivity {
                         break;
                     }
                 }
+
                 if (existeUser == false) {
                     if (pass.equals(confpass)) {
                         Toast.makeText(Registo.this, "Registo Concluido", Toast.LENGTH_SHORT).show();
                         mDatabase.adicionarUser(user, pass);
                         Intent loginIn = new Intent(Registo.this, Login.class);
                         startActivity(loginIn);
-                    } else {
+                    }else{
                         Toast.makeText(Registo.this, "As passwords não combinam", Toast.LENGTH_SHORT).show();
                         password.setText("");
                         confpassword.setText("");
                     }
-                } else {
+                }else{
                     Toast.makeText(Registo.this, "Já existe um utilizador com esse Username", Toast.LENGTH_SHORT).show();
                     name.setText("");
                     password.setText("");

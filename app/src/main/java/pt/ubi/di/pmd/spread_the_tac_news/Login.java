@@ -16,10 +16,10 @@ import java.util.List;
 public class Login extends AppCompatActivity {
     DataBaseHelper mDatabase = new DataBaseHelper(this);
     List<User> listaUsers =  new ArrayList<>();
-    private EditText name;
-    private EditText password;
-    private Button login;
-    private Button registar;
+    EditText name;
+    EditText password;
+    Button login;
+    Button registar;
 
 
     @Override
@@ -27,10 +27,10 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        name = (EditText)findViewById(R.id.etName);
-        password = (EditText)findViewById(R.id.etPassword);
-        login = (Button)findViewById(R.id.btnLogin);
-        registar = (Button)findViewById(R.id.lRegisto);
+        name = findViewById(R.id.etName);
+        password = findViewById(R.id.etPassword);
+        login = findViewById(R.id.btnLogin);
+        registar = findViewById(R.id.lRegisto);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +51,7 @@ public class Login extends AppCompatActivity {
     private void Validate(String userName, String userPassword){
         listaUsers = mDatabase.getAllUsers();
         boolean userExist=false;
+
         for (int i = 0; i<listaUsers.size(); i++) {
             if ((userName.equals(listaUsers.get(i).getUser())) && (userPassword.equals(listaUsers.get(i).getPassword()))) {
                 Toast.makeText(this, "Dados de Login corretos", Toast.LENGTH_SHORT).show();
@@ -67,6 +68,5 @@ public class Login extends AppCompatActivity {
             Toast.makeText(this, "Password ou Username incorretos", Toast.LENGTH_SHORT).show();
             password.setText("");
         }
-
     }
 }
