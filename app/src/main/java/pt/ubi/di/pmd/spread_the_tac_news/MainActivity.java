@@ -59,18 +59,32 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 // fim teste
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView data;
+    public TextView data; //
+    EditText editText;
     Button button;
     TextView welcome;
     String username;
 
-    FetchData process = new FetchData();
+   // FetchData process = new FetchData();
     List<Noticia> listaNoticias = new ArrayList<>();
+    List<User> listaUsers = new ArrayList<>();
     DataBaseHelper db  = new DataBaseHelper(MainActivity.this);
+
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,21 +94,51 @@ public class MainActivity extends AppCompatActivity {
         button = findViewById(R.id.button);
         welcome= findViewById(R.id.txtv_welcome);
         username = getIntent().getStringExtra("Username");
+
         welcome.setText("Welcome "+username);
 
         if (isNetWorkAvaible()) {
-            process.execute();
-            final Handler handler = new Handler(Looper.getMainLooper());
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    listaNoticias = process.NoticiasSucesso();
-                    db.AddMultNews(listaNoticias);
-                    Toast.makeText(MainActivity.this,"Sucesso "+listaNoticias.size(),Toast.LENGTH_SHORT).show();
-                }
-            }, 500);
+            Log.d("TemNet", "Temo net");
+
+            GetNoticias();
+
+
+                final Handler handler = new Handler(Looper.getMainLooper());
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        db.AddMultNews(listaNoticias);
+
+                        listaUsers = db.getAllUsers();
+                        listaNoticias = db.getAll();
+                        Log.d("USERNAMEPA","SizeNoticias:  "+listaNoticias.size());
+                        Log.d("USERNAMEPA","SizeUser:  "+listaUsers.size());
+
+                        db.AddNewsCheck(listaUsers,listaNoticias);
+
+
+                        Toast.makeText(MainActivity.this,"Sucesso "+listaNoticias.size(),Toast.LENGTH_SHORT).show();
+                    }
+                }, 500);
+
+
+
+
+
+
+
+
+
+
+
+        } else {
+            Log.d("TemNet", "Nao temo net");
+
 
         }
+
+
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,131 +150,67 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+
+
+
     }
 
     public boolean isNetWorkAvaible(){
+
         try {
             ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo networkInfo = null;
-
             if (manager != null){
                 networkInfo = manager.getActiveNetworkInfo();
             }
             return networkInfo != null && networkInfo.isConnected();
-
         }catch (NullPointerException e){
             return false;
         }
+
+
     }
 
-/*
-    private class FetchData extends AsyncTask<Void,Void,Void> {
-        String data ="";
-        String dataParsed ="";
-        String singleParsed ="";
-
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            // modificar o modo de armaznamento do json file.
-
-            try {
-
-
-                URL url = new URL(" http://10.0.2.2:80/TAC/get_product_details.php"); // equivale ao localHost/NomedaPastaNoXamp/NomedoFicheiroPhp
-
-
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-                InputStream inputStream = httpURLConnection.getInputStream();
-
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-                String line = "";
-
-                while (line != null){
-
-                    line = bufferedReader.readLine(); // juntar estas duas linhas
-                    data += line;
-                }
-
-                List<Noticia> listaNoticias = new ArrayList<>();
-                String titulo;
-                String contexto;
-
-                JSONArray jsonArray = new JSONArray(data);
-                for (int i = 0 ; i < jsonArray.length(); i++ ){
-
-                    JSONObject jsonObject = (JSONObject) jsonArray.get(i);
-                    titulo =(String) jsonObject.get("Titulo");
-                    contexto = (String) jsonObject.get("Contexto");
-
-                    listaNoticias.add(new Noticia(titulo,contexto));
-
-                }
-
-
-
-
-
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            DataBaseHelper db = new DataBaseHelper(MainActivity.this);
-            if (MainActivity.data.toString().isEmpty()){
-                MainActivity.data.setText("VAZIO");
-            }
-            else {
-                MainActivity.data.setText(dataParsed);
-            }
-
-
-        }
-    }
-
-/*
-    private void getWebsite(){
-        //se nao correr numa outra thread nao funciona
-        //ver o porquê mais tarde !!!!!!!!!!!!!
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //precisa de um try catch
-                final StringBuilder builder = new StringBuilder();
-                try {
-                    Document doc = Jsoup.connect("https://www.facebook.com/ESAFETYglobal/").get();
-                    String title = doc.title();
-                    Elements links = doc.select("div[dir=auto]");
-                    builder.append(title).append("\n");
-
-                    // nao consigo ir buscar o texto
-                    for (Element link : links) {
-                        builder.append("\n").append("Texto: ").append(link.text());
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                runOnUiThread(new Runnable() {
+    public  boolean GetNoticias(){
+        final List<Noticia> teste = new ArrayList<>();
+        String url = "http://10.0.2.2:80/TAC/get_product_details.php";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest (Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void run() {
-                        Text1.setText(builder.toString());
-                    }
-                });
-            }
-        }).start();
-    }
+                    public void onResponse(JSONArray response) {
+                        try {
 
- */
+                            for (int i =0 ; i< response.length();i++){
+                                JSONObject noticia = response.getJSONObject(i);
+
+                                String titulo = noticia.getString("titulo");
+                                Log.d("PORRA",titulo);
+                                String descricao = noticia.getString("descricao");
+                                String data = noticia.getString("data");
+                                String autor = noticia.getString("autor");
+                                teste.add(new Noticia(titulo,descricao,autor,data));
+                            }
+                            Log.d("PORRA","teste: "+teste.size());
+                            listaNoticias = teste;
+                            Log.d("PORRA","ListaNoticias: "+teste.size());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        });
+
+        // Access the RequestQueue through your singleton class.
+        // MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+        RequestQueue mQueue  = Volley.newRequestQueue(MainActivity.this);
+        mQueue.add(jsonArrayRequest);
+
+        return  true;
+    }
 }
