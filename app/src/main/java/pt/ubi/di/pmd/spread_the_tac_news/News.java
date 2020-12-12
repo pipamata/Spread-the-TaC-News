@@ -2,7 +2,9 @@ package pt.ubi.di.pmd.spread_the_tac_news;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.VoiceInteractor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,8 +18,14 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +40,7 @@ public class News extends AppCompatActivity {
     TextView textViewItemNews;
     TextView textViewItemNews2;
     String username;
+
     ImageView newsImage;
 
     @Override
@@ -40,15 +49,18 @@ public class News extends AppCompatActivity {
         setContentView(R.layout.activity_news);
 
         username = getIntent().getStringExtra("Username");
-        DataBaseHelper db = new DataBaseHelper(News.this);
+
+        final DataBaseHelper db = new DataBaseHelper(News.this);
 
         // (activity news )Atividade principal onde vamos ver as noticias
         linearLayoutActivityNew = findViewById(R.id.ll_activity_news);
 
         List<Noticia> todasNoticias;
-        List<LinearLayout> listaLayouts = new ArrayList<>(); // SE NAO UTILIZAR - APAGAR
+
+        List<LinearLayout> listaLayouts = new ArrayList<>(); // SE NAO UTILIZAR APAGAR
 
         todasNoticias = db.getAll(); // metodo retorna uma List/arraylist de Noticias(neste caso so strings), que vem da base de dados.
+
 
         for (int i = todasNoticias.size()-1; i >= 0  ; i--){
 
@@ -71,33 +83,58 @@ public class News extends AppCompatActivity {
 
             final EditText numNota = linLay.findViewById(R.id.edtxt_nota);
             final int idNoticia = i + 1;
+
+
             final Button btn = linLay.findViewById(R.id.button_news_id) ; // pode ser necessario criar um array de botoes de modo a poder saber qual a noticia que foi carregada.
 
-            String buttonName = getString(R.string.avaliar)+" "+i;
-            btn.setText(buttonName);
+            Log.d("USERNAMEPA",username);
+            if (db.isNewCheck(username,idNoticia)){
+                btn.setVisibility(View.GONE);
+                numNota.setVisibility(View.GONE);
+            }
+            else
+            {
+                String buttonName = getString(R.string.avaliar)+" "+i;
+                btn.setText(buttonName);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(!numNota.getText().toString().isEmpty()){
-                        int myNum = Integer.parseInt(numNota.getText().toString());
 
-                        if( myNum > 5 || myNum< 0){
-                            Toast.makeText(News.this,"Precisa colocar um nota entre 0 e 5",Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(News.this, numNota.getText().toString() + " id Noticia:" + idNoticia, Toast.LENGTH_LONG).show(); // cada botao tem um set on click listener diferente e sao criados dinamicamente ao mesmo tempos que as noticias
-                            SendToRemoteDB(username,idNoticia, numNota.getText().toString()); // em vez de renato username
-                            btn.setVisibility(View.GONE);
+                        if(!numNota.getText().toString().isEmpty()){
+                            int myNum = Integer.parseInt(numNota.getText().toString());
+
+                            if( myNum > 5 || myNum< 0){
+                                Toast.makeText(News.this,"Precisa colocar um nota entre 0 e 5",Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                Toast.makeText(News.this, numNota.getText().toString() + " id Noticia:" + idNoticia, Toast.LENGTH_LONG).show(); // cada botao tem um set on click listener diferente e sao criados dinamicamente ao mesmo tempos que as noticias
+
+                                SendToRemoteDBNoticias(username,idNoticia, numNota.getText().toString()); // em vez de renato username
+                                db.UpdateNewsStatus(username,idNoticia);
+                                btn.setVisibility(View.GONE);
+                                numNota.setVisibility(View.GONE);
+                            }
+
                         }
-                    } else {
-                        Toast.makeText(News.this,"Selecione uma nota de 0 a 5",Toast.LENGTH_SHORT).show();
+                        else {
+                            Toast.makeText(News.this,"Selecione uma nota de 0 a 5",Toast.LENGTH_SHORT).show();
+                        }
+
                     }
-                }
-            });
+
+
+                });
+
+            }
+
         }
+        // exemplo de como aceder a um LinearLayout já impresso
+        //TextView teste = listaLayouts.get(0).findViewById(R.id.txtv_teste);
+        //teste.setText(getString(R.string.resultou));
     }
 
-    public  boolean SendToRemoteDB(final String user, int id, final String nota ){
+    public  boolean SendToRemoteDBNoticias(final String user, int id, final String nota ){
         final String noticiaID = ""+id;
         String url = "http://10.0.2.2:80/TAC/add_note.php";
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
@@ -106,6 +143,7 @@ public class News extends AppCompatActivity {
                     public void onResponse(String response) {
                         Toast.makeText(News.this, response.trim(),Toast.LENGTH_SHORT).show();
                     }
+
                 },
                 new Response.ErrorListener() {
                     @Override
@@ -124,8 +162,12 @@ public class News extends AppCompatActivity {
                 return params;
             }
         };
+
         RequestQueue requestQueue  = Volley.newRequestQueue(News.this);
         requestQueue.add(stringRequest);
         return  true;
     }
+
+
+
 }
