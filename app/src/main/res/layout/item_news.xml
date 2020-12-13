@@ -9,7 +9,8 @@
         android:id="@+id/txtv_titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textSize="30sp" />
 
     <ImageView
         android:id="@+id/news_image"
@@ -17,32 +18,32 @@
         android:layout_height="89dp"
         android:layout_gravity="center"
         android:contentDescription="@string/imagemnoticia"
-        android:src="@drawable/ic_launcher_foreground" />
+        android:src="@drawable/teste" />
 
     <TextView
         android:id="@+id/txtv_teste"
         android:layout_width="match_parent"
         android:layout_height="145dp"
-        android:gravity="center" />
+        android:gravity="center|left" />
 
     <TextView
         android:id="@+id/txtv_autor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Autor" />
+        android:text="Autor:" />
 
     <TextView
         android:id="@+id/txtv_data"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Data" />
+        android:text="Data:" />
 
     <EditText
         android:id="@+id/edtxt_nota"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="NOTA 0 a 5"
+        android:hint="avaliar de 0 a 5"
         android:inputType="number" />
 
     <Button
@@ -50,6 +51,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="7dp"
+        android:background="#3C3F41" />
 
 
 </LinearLayout>

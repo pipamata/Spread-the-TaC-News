@@ -2,33 +2,31 @@ package pt.ubi.di.pmd.spread_the_tac_news;
 
 public class Noticia {
 
-    String Titulo;
-    String Contexto;
+    String titulo;
+    String contexto;
     String autor;
-    // imagem
     String data;
-    //numero de likes
 
     public Noticia() {
-        Titulo = "";
-        Contexto = "";
+        titulo = "";
+        contexto = "";
         this.autor = "";
         this.data = "";
     }
 
     public Noticia(String titulo, String contexto, String autor, String data) {
-        Titulo = titulo;
-        Contexto = contexto;
+        this.titulo = titulo;
+        this.contexto = contexto;
         this.autor = autor;
         this.data = data;
     }
 
     public String getTitulo() {
-        return Titulo;
+        return titulo;
     }
 
     public String getContexto() {
-        return Contexto;
+        return contexto;
     }
 
     public String getAutor() {
@@ -40,11 +38,11 @@ public class Noticia {
     }
 
     public void setTitulo(String titulo) {
-        Titulo = titulo;
+        titulo = titulo;
     }
 
     public void setContexto(String contexto) {
-        Contexto = contexto;
+        contexto = contexto;
     }
 
     public void setAutor(String autor) {
@@ -58,8 +56,8 @@ public class Noticia {
     @Override
     public String toString() {
         return "Noticia{" +
-                "Titulo='" + Titulo + '\'' +
-                ", Contexto='" + Contexto + '\'' +
+                "Titulo='" + titulo + '\'' +
+                ", Contexto='" + contexto + '\'' +
                 ", autor='" + autor + '\'' +
                 ", data='" + data + '\'' +
                 '}';

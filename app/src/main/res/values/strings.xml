@@ -2,5 +2,15 @@
     <string name="app_name">Spread-the-TaC-News</string>
     <string name="imagemnoticia">Imagem da Noticia</string>
     <string name="avaliar">Avaliar</string>
+    <string name="registo">REGISTO</string>
+    <string name="registar">Registar</string>
+    <string name="login">LOGIN</string>
+    <string name="tac">TAC</string>
+    <string name="verNoticias">Ver Noticias</string>
+    <string name="password">Password</string>
+    <string name="confpassword">Comfirmar Password</string>
+    <string name="nome">Nome</string>
     <string name="resultou">Resultou=?????</string>
+    <string name="semInternet">Sem Conexao à Internet</string>
+
 </resources>

@@ -4,23 +4,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Login extends AppCompatActivity {
-    DataBaseHelper mDatabase = new DataBaseHelper(this);
+    DataBaseHelper db = new DataBaseHelper(this);
     List<User> listaUsers =  new ArrayList<>();
-    EditText name;
-    EditText password;
-    Button login;
-    Button registar;
-
+    EditText name, password;
+    Button login,registar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +40,11 @@ public class Login extends AppCompatActivity {
                 Intent registoIn = new Intent(Login.this, Registo.class);
                 startActivity(registoIn);
             }
-            });
+        });
     }
 
     private void Validate(String userName, String userPassword){
-        listaUsers = mDatabase.getAllUsers();
+        listaUsers = db.getAllUsers();
         boolean userExist=false;
 
         for (int i = 0; i<listaUsers.size(); i++) {
@@ -59,7 +54,6 @@ public class Login extends AppCompatActivity {
                 break;
             }
         }
-
         if (userExist){
             Intent intent = new Intent(Login.this, MainActivity.class);
             intent.putExtra("Username", userName);

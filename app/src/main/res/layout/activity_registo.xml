@@ -12,12 +12,12 @@
         android:layout_width="156dp"
         android:layout_height="76dp"
         android:layout_marginTop="56dp"
-        android:text="Registo"
+        android:gravity="center"
+        android:text="@string/registo"
         android:textColor="#000000"
         android:textSize="36sp"
         app:layout_constraintBottom_toTopOf="@+id/rNome"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
@@ -26,65 +26,62 @@
         android:id="@+id/rNome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
+        android:layout_marginBottom="32dp"
         android:ems="10"
-        android:hint="Nome"
+        android:hint="@string/nome"
         android:inputType="textPersonName"
         app:layout_constraintBottom_toTopOf="@+id/rPass"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.472"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <EditText
-        android:id="@+id/rPass"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="Password"
-        android:inputType="textPassword"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.472"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/rConfPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="24dp"
         android:ems="10"
-        android:hint="Comfirmar Password"
+        android:hint="@string/confpassword"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.472"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rPass" />
+
+    <Button
+        android:id="@+id/rRegisto"
+        android:layout_width="107dp"
+        android:layout_height="57dp"
+        android:text="@string/registar"
+        app:layout_constraintBottom_toTopOf="@+id/rLogin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/rConfPass"
+        app:layout_constraintVertical_bias="0.573" />
 
     <Button
         android:id="@+id/rLogin"
         android:layout_width="107dp"
         android:layout_height="57dp"
         android:layout_marginBottom="76dp"
-        android:text="Login"
+        android:text="@string/login"
         android:textColor="#000000"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rConfPass"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.502" />
 
-    <Button
-        android:id="@+id/rRegisto"
+    <EditText
+        android:id="@+id/rPass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Registar"
-        app:layout_constraintBottom_toTopOf="@+id/rLogin"
+        android:ems="10"
+        android:hint="@string/password"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rConfPass"
-        app:layout_constraintVertical_bias="0.532" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.357" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

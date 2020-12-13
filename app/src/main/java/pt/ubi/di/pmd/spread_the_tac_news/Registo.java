@@ -8,17 +8,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class Registo extends AppCompatActivity {
-    DataBaseHelper mDatabase = new DataBaseHelper(this);
-    EditText name;
-    EditText password;
-    EditText confpassword;
-    Button registo;
-    Button login;
+    DataBaseHelper db = new DataBaseHelper(this);
+    EditText name, password, confpassword;
+    Button registo,login;
     List<User> listaUsers =  new ArrayList<>();
 
     @Override
@@ -47,7 +43,7 @@ public class Registo extends AppCompatActivity {
                 String pass = password.getText().toString();
                 String confpass = confpassword.getText().toString();
                 boolean existeUser = false;
-                listaUsers = mDatabase.getAllUsers();
+                listaUsers = db.getAllUsers();
 
                 for (int i = 0; i<listaUsers.size(); i++) {
                     if ((user.equals(listaUsers.get(i).getUser()))) {
@@ -59,7 +55,7 @@ public class Registo extends AppCompatActivity {
                 if (existeUser == false) {
                     if (pass.equals(confpass)) {
                         Toast.makeText(Registo.this, "Registo Concluido", Toast.LENGTH_SHORT).show();
-                        mDatabase.adicionarUser(user, pass);
+                        db.addUser(user, pass);
                         Intent loginIn = new Intent(Registo.this, Login.class);
                         startActivity(loginIn);
                     }else{
