@@ -155,12 +155,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         String query = "SELECT * FROM "+ USERS;
         Cursor cursor = db.rawQuery(query,null);
 
-        if (cursor.moveToFirst()){ // cursos.moveToFirst move o ponteiro para a primeira linha da base de dados
+        if (cursor.moveToFirst()){
             do {
                 String user = cursor.getString(0);
                 String password = cursor.getString(1);
                 listaUsers.add(new User(user, password));
-            }while(cursor.moveToNext()); // cursor.MoveToNext move o ponteiro para a proxima linha da base de dados se existir
+            }while(cursor.moveToNext());
         }
         cursor.close();
         db.close();

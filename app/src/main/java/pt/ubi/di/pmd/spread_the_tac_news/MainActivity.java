@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("Username");
         noNet = findViewById(R.id.txtv_noInternet);
 
-        welcome.setText("Welcome "+username);
+        welcome.setText("Bem-Vindo "+username);
 
         if (isNetWorkAvaible()) {
             GetNoticias();
