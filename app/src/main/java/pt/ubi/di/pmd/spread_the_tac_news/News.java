@@ -2,7 +2,10 @@ package pt.ubi.di.pmd.spread_the_tac_news;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -89,27 +92,48 @@ public class News extends AppCompatActivity {
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(!numNota.getText().toString().isEmpty()){
-                            int myNum = Integer.parseInt(numNota.getText().toString());
+                        if(isNetWorkAvaible()){
 
-                            if( myNum > notaMaxima|| myNum< notaMinima){
-                                Toast.makeText(News.this,"Precisa colocar um nota entre 1 e 5",Toast.LENGTH_SHORT).show();
+                            if(!numNota.getText().toString().isEmpty()){
+                                int myNum = Integer.parseInt(numNota.getText().toString());
+
+                                if( myNum > notaMaxima|| myNum< notaMinima){
+                                    Toast.makeText(News.this,"Precisa colocar um nota entre 1 e 5",Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    Toast.makeText(News.this, "Avaliaste esta noticia com :"+numNota.getText().toString(), Toast.LENGTH_LONG).show(); // cada botao tem um set on click listener diferente e sao criados dinamicamente ao mesmo tempos que as noticias
+                                    SendToRemoteDBNoticias(username,idNoticia, numNota.getText().toString()); // em vez de renato username
+                                    db.UpdateNewsStatus(username,idNoticia);
+                                    btn.setVisibility(View.GONE);
+                                    numNota.setVisibility(View.GONE);
+                                }
                             }
                             else {
-                                Toast.makeText(News.this, "Avaliaste esta noticia com :"+numNota.getText().toString(), Toast.LENGTH_LONG).show(); // cada botao tem um set on click listener diferente e sao criados dinamicamente ao mesmo tempos que as noticias
-                                SendToRemoteDBNoticias(username,idNoticia, numNota.getText().toString()); // em vez de renato username
-                                db.UpdateNewsStatus(username,idNoticia);
-                                btn.setVisibility(View.GONE);
-                                numNota.setVisibility(View.GONE);
+                                Toast.makeText(News.this,"Selecione uma nota de 1 a 5",Toast.LENGTH_SHORT).show();
                             }
                         }
                         else {
-                            Toast.makeText(News.this,"Selecione uma nota de 1 a 5",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(News.this,"Sem Internet",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         }
+    }
+
+    public boolean isNetWorkAvaible(){
+        try {
+            ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = null;
+            if (manager != null){
+                networkInfo = manager.getActiveNetworkInfo();
+            }
+            return networkInfo != null && networkInfo.isConnected();
+        }catch (NullPointerException e){
+            return false;
+        }
+
+
     }
     public  void SendToRemoteDBNoticias(final String user, int id, final String nota ){
         final String noticiaID = ""+id;
