@@ -24,6 +24,8 @@ public class News extends AppCompatActivity {
 
     LinearLayout linearLayoutActivityNew;
     String username;
+    int notaMaxima =5;
+    int notaMinima=1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,8 +92,8 @@ public class News extends AppCompatActivity {
                         if(!numNota.getText().toString().isEmpty()){
                             int myNum = Integer.parseInt(numNota.getText().toString());
 
-                            if( myNum > 5 || myNum< 0){
-                                Toast.makeText(News.this,"Precisa colocar um nota entre 0 e 5",Toast.LENGTH_SHORT).show();
+                            if( myNum > notaMaxima|| myNum< notaMinima){
+                                Toast.makeText(News.this,"Precisa colocar um nota entre 1 e 5",Toast.LENGTH_SHORT).show();
                             }
                             else {
                                 Toast.makeText(News.this, "Avaliaste esta noticia com :"+numNota.getText().toString(), Toast.LENGTH_LONG).show(); // cada botao tem um set on click listener diferente e sao criados dinamicamente ao mesmo tempos que as noticias
@@ -102,7 +104,7 @@ public class News extends AppCompatActivity {
                             }
                         }
                         else {
-                            Toast.makeText(News.this,"Selecione uma nota de 0 a 5",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(News.this,"Selecione uma nota de 1 a 5",Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

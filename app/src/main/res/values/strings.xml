@@ -11,4 +11,5 @@
     <string name="confpassword">Confirmar Password</string>
     <string name="nome">Nome</string>
     <string name="semInternet">Sem Conexão à Internet</string>
+    <string name="avaliarNoticia">avaliar de 1 a 5</string>
 </resources>

@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     List<User> listaUsers = new ArrayList<>();
     DataBaseHelper db  = new DataBaseHelper(MainActivity.this);
 
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

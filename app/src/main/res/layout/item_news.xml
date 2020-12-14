@@ -43,7 +43,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="avaliar de 0 a 5"
+        android:hint="@string/avaliarNoticia"
         android:inputType="number" />
 
     <Button
