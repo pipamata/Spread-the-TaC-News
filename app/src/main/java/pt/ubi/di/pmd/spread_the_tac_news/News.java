@@ -2,7 +2,7 @@ package pt.ubi.di.pmd.spread_the_tac_news;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -56,8 +56,25 @@ public class News extends AppCompatActivity {
             final EditText numNota = linLay.findViewById(R.id.edtxt_nota);
             final int idNoticia = i + 1;
 
-            final Button btn = linLay.findViewById(R.id.button_news_id) ;
+            final Button share = linLay.findViewById(R.id.button_share);
 
+            // botao para fazer share das noticias
+            // -- criar a string com toda a info a ser enviada
+            final String titulo = todasNoticias.get(i).getTitulo();
+            final String noticia = todasNoticias.get(i).getContexto();
+             share.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent sharing = new Intent(Intent.ACTION_SEND);
+                    sharing.setType("text/plain");
+                    sharing.putExtra(Intent.EXTRA_SUBJECT, titulo);
+                    sharing.putExtra(Intent.EXTRA_TEXT, noticia);
+                    // texto que aparece no menu de escolha da aplicação
+                    startActivity(Intent.createChooser(sharing, "Compartilhar notícia via:"));
+                }
+            });
+
+            final Button btn = linLay.findViewById(R.id.button_news_id);
             if (db.isNewCheck(username,idNoticia)){
 
                 btn.setVisibility(View.GONE);
